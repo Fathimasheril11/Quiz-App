@@ -1,5 +1,5 @@
 # ---------- Stage 1: Build the Spring Boot JAR ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 
 # Copy Maven configuration and download dependencies
@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ---------- Stage 2: Run the built JAR ----------
-FROM eclipse-temurin:17-jdk
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file from the builder stage
@@ -21,4 +21,5 @@ COPY --from=builder /app/target/eQuiz-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
 
 # Run the application
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
